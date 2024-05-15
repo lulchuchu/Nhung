@@ -19,7 +19,7 @@ public class ParkingSlotController {
         this.parkingSlotService = parkingSlotService;
     }
 
-    @GetMapping("/parkingSlot")
+    @GetMapping("")
     public List<ParkingSlot> getAllParkingSlots() {
         return parkingSlotService.getAllParkingSlots();
     }

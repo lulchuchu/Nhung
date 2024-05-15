@@ -35,12 +35,24 @@ public class CheckInOutService implements CheckInOutServiceInterface {
         System.out.println("CHECKING IN OUT"+ cardNumber + licensePlate);
         Optional<Vehicle> vehicle = vehicleRepo.findByCardNumber(cardNumber);
         if (!vehicle.isPresent()) {
+            String topic = "fault_detected";
+            try {
+                mqttGateWay.sendToMqtt("Invalid cardNumber", topic);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             System.out.println("Vehicle not found");
             return "Vehicle not found";
         }
 
         boolean isValid = Objects.equals(vehicle.get().getLicencePlate(), licensePlate);
         if (!isValid) {
+            String topic = "fault_detected";
+            try {
+                mqttGateWay.sendToMqtt("Invalid licensePlate", topic);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             System.out.println("Invalid license plate");
 
             return "Invalid license plate";

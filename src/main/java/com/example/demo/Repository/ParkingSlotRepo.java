@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface ParkingSlotRepo extends JpaRepository<ParkingSlot, Long>{
     public List<ParkingSlot> findByIsOccupied(boolean isOccupied);
-
+    public ParkingSlot findBySlotName(String slotName);
 }

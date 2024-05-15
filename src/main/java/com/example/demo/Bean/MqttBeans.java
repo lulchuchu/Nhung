@@ -2,6 +2,7 @@ package com.example.demo.Bean;
 
 
 import com.example.demo.Service.CheckInOutServiceInterface;
+import com.example.demo.Service.ParkingSlotService;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,14 +23,20 @@ import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Configuration
 public class MqttBeans {
     @Autowired
     SimpMessagingTemplate simpMessagingTemplate;
     @Autowired
     private CheckInOutServiceInterface checkInOutServiceInteface;
+    @Autowired
+    private ParkingSlotService parkingSlotService;
     private String cardNumber;
     private String licensePalate;
+    private String parkingSlots;
     @Bean
     public MqttPahoClientFactory mqttClientFactory(){
 
@@ -105,12 +112,21 @@ public class MqttBeans {
                     checkInOut();
                 }
 
+                if (topic.equals("parking/availability")) {
+                    String str = message.getPayload().toString();
+                    List<String> parkingSlots = Arrays.asList(str.substring(1, str.length() - 1).split(",\\s*"));
+                    System.out.println(parkingSlots);
+                    parkingSlotService.updateParkingSlot(parkingSlots);
+                    System.out.println(parkingSlots);
+                }
+
 //                if (!cardNumber.equals("") && !licensePalate.equals("")) {
 //                    checkInOutServiceInteface.checkInOut(cardNumber, licensePalate);
 //                }
 
                 if (topic.equals("parkingSlot")) {
                     String payload = message.getPayload().toString();
+
                     System.out.println("Parking slot " + payload);
                 }
             }

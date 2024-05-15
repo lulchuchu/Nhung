@@ -16,4 +16,8 @@ public class ParkingSlot {
     private Long id;
     private String slotName;
     private boolean isOccupied;
+
+    public Boolean getOccupied() {
+        return isOccupied;
+    }
 }
